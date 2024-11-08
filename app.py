@@ -129,5 +129,30 @@ def add():
 
     return render_template('add.html')
 
+@app.route('/index')
+def index():
+    """口コミ一覧ページ"""
+    # ログインしているかチェック
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    
+    # データベース接続
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # 現在のユーザーの評価データを取得
+    cursor.execute("SELECT visited, place, attitude, price, speed FROM evaluation WHERE user_id = ?", (user_id,))
+    reviews = cursor.fetchall()
+
+    # データを辞書形式に変換
+    reviews_list = [{'visited': r[0], 'place': r[1], 'attitude': r[2], 'price': r[3], 'speed': r[4]} for r in reviews]
+
+    # 接続を閉じる
+    close_db_connection(conn)
+
+    return render_template('index.html', reviews=reviews_list)
+
 if __name__ == '__main__':
     app.run(debug=True ,use_reloader=True)
