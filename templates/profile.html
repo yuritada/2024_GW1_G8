@@ -16,7 +16,7 @@
 
         <!-- ユーザーの口コミ評価一覧 -->
         <h2>あなたの口コミ一覧</h2>
-        {% if evaluations %}
+        {% if evaluation %}
         <table>
             <thead>
                 <tr>
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for evaluation in evaluations %}
+                {% for evaluation in evaluation %}
                 <tr>
                     <td>{{ evaluation[2] }}</td>
                     <td>{{ evaluation[3] }}</td>

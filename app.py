@@ -10,15 +10,20 @@ app.secret_key = 'your_secret_key'  # セッション管理用の秘密鍵
 #     """ホームページ"""
 #     return render_template('index.html')
 
+# データベースから全ての口コミを取得
+def get_reviews():
+    conn = sqlite3.connect('travel.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM evaluation')
+    reviews = c.fetchall()
+    conn.close()
+    return reviews
+
+# 口コミ一覧ページ
 @app.route('/')
 def home():
-    """ホームページ"""
-    # ここでreviewsのデータを用意
-    reviews = [
-        {'visited': '東京', 'place': '浅草', 'attitude': '良い', 'price': '安い', 'speed': '早い'},
-        {'visited': '京都', 'place': '金閣寺', 'attitude': '普通', 'price': '高い', 'speed': '遅い'},
-    ]
-    return render_template('index.html', reviews=reviews)
+    evaluation = get_reviews()
+    return render_template('index.html', evaluation=evaluation)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -91,12 +96,12 @@ def profile():
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM evaluation WHERE user_id = ?", (user_id,))
-    evaluations = cursor.fetchall()
+    evaluation = cursor.fetchall()
 
     # 接続を閉じる
     close_db_connection(conn)
 
-    return render_template('profile.html', evaluations=evaluations) 
+    return render_template('profile.html', evaluation=evaluation) 
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -129,30 +134,30 @@ def add():
 
     return render_template('add.html')
 
-@app.route('/index')
-def index():
-    """口コミ一覧ページ"""
-    # ログインしているかチェック
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+# @app.route('/index')
+# def index():
+#     """口コミ一覧ページ"""
+#     # ログインしているかチェック
+#     if 'user_id' not in session:
+#         return redirect(url_for('login'))
 
-    user_id = session['user_id']
+#     user_id = session['user_id']
     
-    # データベース接続
-    conn = get_db_connection()
-    cursor = conn.cursor()
+#     # データベース接続
+#     conn = get_db_connection()
+#     cursor = conn.cursor()
 
-    # 現在のユーザーの評価データを取得
-    cursor.execute("SELECT visited, place, attitude, price, speed FROM evaluation WHERE user_id = ?", (user_id,))
-    reviews = cursor.fetchall()
+#     # 現在のユーザーの評価データを取得
+#     cursor.execute("SELECT visited, place, attitude, price, speed FROM evaluation WHERE user_id = ?", (user_id,))
+#     reviews = cursor.fetchall()
 
-    # データを辞書形式に変換
-    reviews_list = [{'visited': r[0], 'place': r[1], 'attitude': r[2], 'price': r[3], 'speed': r[4]} for r in reviews]
+#     # データを辞書形式に変換
+#     reviews_list = [{'visited': r[0], 'place': r[1], 'attitude': r[2], 'price': r[3], 'speed': r[4]} for r in reviews]
 
-    # 接続を閉じる
-    close_db_connection(conn)
+#     # 接続を閉じる
+#     close_db_connection(conn)
 
-    return render_template('index.html', reviews=reviews_list)
+#     return render_template('index.html', reviews=reviews_list)
 
 if __name__ == '__main__':
     app.run(debug=True ,use_reloader=True)
