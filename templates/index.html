@@ -10,7 +10,7 @@
         <h1>訪れた場所の口コミ一覧</h1>
 
         <!-- ユーザーの口コミ評価一覧 -->
-        <h2>あなたの口コミ一覧</h2>
+        <h2>口コミ一覧</h2>
         {% if evaluation %}
         <table>
             <thead>
@@ -39,6 +39,7 @@
         {% endif %}
         <div class="actions">
             <a href="{{ url_for('add') }}" class="btn">新しい口コミを書く</a> 
+            <a href="{{ url_for('profile') }}" class="btn">自分の口コミに戻る</a>
             <a href="{{ url_for('login') }}" class="btn logout-btn">ログアウト</a>
         </div>
     </div>

@@ -7,12 +7,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>ようこそ、{{ session['user_id'] }} さんのプロフィールページ</h1>
+        <h1>ようこそ、{{ username }} さんのプロフィールページ</h1>
 
-        <!-- ログアウトボタン -->
-        <div class="logout">
-            <a href="{{ url_for('logout') }}" class="btn logout-btn">ログアウト</a>
-        </div>
 
         <!-- ユーザーの口コミ評価一覧 -->
         <h2>あなたの口コミ一覧</h2>
@@ -46,6 +42,8 @@
         <!-- 口コミ追加ページへのリンク -->
         <div class="actions">
             <a href="{{ url_for('add') }}" class="btn">新しい口コミを追加する</a>
+            <a href="{{ url_for('home') }}" class="btn">全ユーザの口コミを見る</a>
+            <a href="{{ url_for('logout') }}" class="btn logout-btn">ログアウト</a>
         </div>
     </div>
 </body>
