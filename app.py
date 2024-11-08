@@ -5,16 +5,19 @@ from db import get_db_connection, close_db_connection
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # セッション管理用の秘密鍵
 
+userid = 0
+
 # @app.route('/')
 # def home():
 #     """ホームページ"""
 #     return render_template('index.html')
 
 # データベースから全ての口コミを取得
-def get_reviews():
+def get_reviews(Calum,db_name):
     conn = sqlite3.connect('travel.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM evaluation')
+    c.execute(f'SELECT {Calum} FROM {db_name}')
+    print(c.fetchall())
     reviews = c.fetchall()
     conn.close()
     return reviews
@@ -22,8 +25,8 @@ def get_reviews():
 # 口コミ一覧ページ
 @app.route('/')
 def home():
-    evaluation = get_reviews()
-    return render_template('index.html', evaluation=evaluation)
+    a = get_reviews("*","evaluation")
+    return render_template('index.html', evaluation=a)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -62,6 +65,7 @@ def logout():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global userid
     """ユーザーログイン"""
     if request.method == 'POST':
         username = request.form['username']
@@ -79,6 +83,7 @@ def login():
 
         if user:
             session['user_id'] = user[0]  # ユーザーIDをセッションに保存
+            userid = user[0]
             return redirect(url_for('profile'))
         else:
             return "ログイン失敗"
@@ -88,20 +93,33 @@ def login():
 @app.route('/profile')
 def profile():
     """ユーザーのプロフィールページ"""
+    # ログインしていない場合、ログインページにリダイレクト
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
     user_id = session['user_id']
+
+    # データベース接続の確立
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    # 全てのユーザー情報を取得
+    user_map = get_reviews("user_id, username", "user_map")
+
+    # ログイン中のユーザーの評価情報を取得
     cursor.execute("SELECT * FROM evaluation WHERE user_id = ?", (user_id,))
     evaluation = cursor.fetchall()
 
-    # 接続を閉じる
-    close_db_connection(conn)
+    # ユーザーIDに対応するユーザーネームを取得
+    cursor.execute("SELECT username FROM user_map WHERE user_id = ?", (user_id,))
+    result = cursor.fetchone()
+    username = result[0] if result else "Unknown"
 
-    return render_template('profile.html', evaluation=evaluation) 
+    # データベース接続を閉じる
+    conn.close()
+
+    # テンプレートにデータを渡してレンダリング
+    return render_template('profile.html', evaluation=evaluation, user_map=user_map, username=username)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
