@@ -9,30 +9,34 @@
     <div class="container">
         <h1>訪れた場所の口コミ一覧</h1>
 
-        <!-- 口コミテーブル -->
+        <!-- ユーザーの口コミ評価一覧 -->
+        <h2>あなたの口コミ一覧</h2>
+        {% if evaluation %}
         <table>
             <thead>
                 <tr>
                     <th>訪れた場所</th>
-                    <th>場所</th>
-                    <th>態度</th>
-                    <th>価格</th>
-                    <th>スピード</th>
+                    <th>場所の評価</th>
+                    <th>態度の評価</th>
+                    <th>価格の評価</th>
+                    <th>スピードの評価</th>
                 </tr>
             </thead>
             <tbody>
-                {% for review in reviews %}
+                {% for evaluation in evaluation %}
                 <tr>
-                    <td>{{ review['visited'] }}</td>
-                    <td>{{ review['place'] }}</td>
-                    <td>{{ review['attitude'] }}</td>
-                    <td>{{ review['price'] }}</td>
-                    <td>{{ review['speed'] }}</td>
+                    <td>{{ evaluation[2] }}</td>
+                    <td>{{ evaluation[3] }}</td>
+                    <td>{{ evaluation[4] }}</td>
+                    <td>{{ evaluation[5] }}</td>
+                    <td>{{ evaluation[6] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
+        {% else %}
+        <p>まだ口コミがありません。</p>
+        {% endif %}
         <div class="actions">
             <a href="{{ url_for('add') }}" class="btn">新しい口コミを書く</a> 
             <a href="{{ url_for('login') }}" class="btn logout-btn">ログアウト</a>
