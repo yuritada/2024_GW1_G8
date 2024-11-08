@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新しい口コミを投稿する</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>新しい口コミを投稿する</h1>
+    <form method="POST">
+        <label>訪れた場所: <input type="text" name="visited" required></label><br>
+        <label>場所の評価（1～10）: <input type="number" name="place" min="1" max="10" required></label><br>
+        <label>態度の評価（1～10）: <input type="number" name="attitude" min="1" max="10" required></label><br>
+        <label>価格の評価（1～10）: <input type="number" name="price" min="1" max="10" required></label><br>
+        <label>スピードの評価（1～10）: <input type="number" name="speed" min="1" max="10" required></label><br>
+        <button type="submit">投稿する</button>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">口コミ一覧に戻る</a></p>
+</body>
+</html>

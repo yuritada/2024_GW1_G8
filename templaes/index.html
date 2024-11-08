@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>口コミ一覧</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>訪れた場所の口コミ一覧</h1>
+
+        <!-- 口コミテーブル -->
+        <table>
+            <thead>
+                <tr>
+                    <th>訪れた場所</th>
+                    <th>場所</th>
+                    <th>態度</th>
+                    <th>価格</th>
+                    <th>スピード</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td>{{ review['visited'] }}</td>
+                    <td>{{ review['place'] }}</td>
+                    <td>{{ review['attitude'] }}</td>
+                    <td>{{ review['price'] }}</td>
+                    <td>{{ review['speed'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="actions">
+            <a href="{{ url_for('add') }}" class="btn">新しい口コミを書く</a> 
+            <a href="{{ url_for('login') }}" class="btn logout-btn">ログアウト</a>
+        </div>
+    </div>
+</body>
+</html>

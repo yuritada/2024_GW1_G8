@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>プロフィールページ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>ようこそ、{{ session['user_id'] }} さんのプロフィールページ</h1>
+
+        <!-- ログアウトボタン -->
+        <div class="logout">
+            <a href="{{ url_for('logout') }}" class="btn logout-btn">ログアウト</a>
+        </div>
+
+        <!-- ユーザーの口コミ評価一覧 -->
+        <h2>あなたの口コミ一覧</h2>
+        {% if evaluations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>訪れた場所</th>
+                    <th>場所の評価</th>
+                    <th>態度の評価</th>
+                    <th>価格の評価</th>
+                    <th>スピードの評価</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for evaluation in evaluations %}
+                <tr>
+                    <td>{{ evaluation[2] }}</td>
+                    <td>{{ evaluation[3] }}</td>
+                    <td>{{ evaluation[4] }}</td>
+                    <td>{{ evaluation[5] }}</td>
+                    <td>{{ evaluation[6] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>まだ口コミがありません。</p>
+        {% endif %}
+
+        <!-- 口コミ追加ページへのリンク -->
+        <div class="actions">
+            <a href="{{ url_for('add') }}" class="btn">新しい口コミを追加する</a>
+        </div>
+    </div>
+</body>
+</html>
